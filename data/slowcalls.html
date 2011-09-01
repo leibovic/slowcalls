@@ -1,0 +1,56 @@
+<html>
+<head>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js'></script>
+<style>
+.ui-accordion
+.ui-accordion-header a {
+  padding: 0 1.5em;
+}
+</style>
+<script>
+var svgDoc;
+jQuery(document).ready(function(){
+  ('#toplevels').accordion({
+    active: false,
+    autoHeight: false,
+    clearStyle: true,
+    collapsible: true,
+    icons: { 'header': 'ui-icon-plus', 'headerSelected': 'ui-icon-minus' },
+    change: function(event, ui) {
+      svgFrame.selectToplevel(ui.newHeader.attr('id'));
+    }
+  });
+  ('.slowcaller').accordion({
+    active: false,
+    autoHeight: false,
+    clearStyle: true,
+    collapsible: true
+  });
+  svgDoc = svgFrame.contentDocument;
+});
+</script>
+</head>
+<body>
+This is a first cut at a page for investigating extensions that invoke expensive operations (see <a href='https://bugzilla.mozilla.org/show_bug.cgi?id=558200'>bug 558200</a>). It uses the instrumentation from <a href='https://bugzilla.mozilla.org/show_bug.cgi?id=507012'>bug 507012</a> to capture every Javascript function entry and exit, and correlates those with entries in the FunctionTimer timeline log.
+<p>
+These are all of the top-level scripts that invoked Javascript functions. Expand a script to see all of the functions called within the execution scope of that script where at least one timeline event was logged.
+<p>
+
+TODOs:
+<ul>
+<li>Activate the specific timeline events
+<li>Make a by-event view to add to the by-toplevel view (DB terms: group by event instead of group by toplevel. Maybe I ought to use a DB...)
+<li>Add full JS callstacks to the events
+<li>Activate the timechart boxes, with cursor keys to walk forward/backward
+<li>Eliminate wait time (time between events?)
+<li>Annotate graph with the startup markers
+<li>Zooming/narrowing (select a subset of the whole time range)
+<li>Restrict to certain toplevels
+<li>Rationalize what a toplevel is
+<li>Hovers
+<li>Measure time for a range selection
+<li>Generalize
+</ul>
+<p>
